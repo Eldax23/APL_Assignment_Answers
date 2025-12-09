@@ -1,57 +1,57 @@
-# problem 1
-import numpy as nmpy
-import torch
-import matplotlib.pyplot as plt
 import pandas as pd
-from flask import Flask
-array = nmpy.arrange(1, 20)
-print("mean:", nmpy.mean(array))
-print("standard deviation:", nmpy.std(array))
-print("median:", nmpy.median(array))
+import csv
+import json
+
+# 1
+with open("students.csv", mode="r") as file:
+    reader = csv.DictReader(file)    
+    for row in reader:
+        if int(row["Grade"]) > 80:
+            print(row["Name"])
 
 
-#-----------------------------------------------------
+#----------------------------------------------------------
 
-# problem 2
+# 2
 
 data = {
-    "Name": ["Nada", "Nadine", "Eyad", "Ahmed"],
-    "Age": [18 , 20 , 19 , 23],
-    "Score": [20, 30, 85, 90]
+    "course": "Python",
+    "duration": "3 months",
+    "students": ["Ali", "Sara"]
 }
+with open("course.json", "w") as file:
+    json.dump(data, file, indent=4)
+with open("course.json", "r") as file:
+    loaded_data = json.load(file)
+
+
+
+print(loaded_data["students"])
+
+# -------------------------------------------------
+# 3
+
+
+data = {
+    "ID": [1, 2, 3],
+    "Name": ["Ali", "Mona", "Omar"],
+    "Salary": [5000, 6200, 4800]
+}
+
 df = pd.DataFrame(data)
-result=df[df["score"] > 80]
-print(result)
+df.to_excel("employees.xlsx", index=False)
+loaded_df = pd.read_excel("employees.xlsx")
+print(loaded_df[["Name", "Salary"]])
 
-#--------------------------------------------------
+# -----------------------------------------------------
+# 4
 
-# problem 3
-
-x = [1,2,3,4,5]
-y = [1,4,9,16,25]
-plt.plot(x, y)
-plt.xlabel("x axis")
-plt.ylabel("y axis")
-plt.title("equivalent square numbers")
-plt.show()
-
-#-------------------------------------------------
-
-# problem 4
-
-app = Flask(__name__)
-@app.route('/hello')
-def hello():
-    return "Hello, Advanced Python!"
-if __name__ == "__main__":
-    app.run()
-
-#--------------------------------------------
-# Problem 5:
-t1 = torch.tensor([1,2,3])
-t2 = torch.tensor([4,5,6])
-dot = torch.dot(t1, t2)
-mul = t1 * t2
-print("dot product:", dot)
-print("per element multiplication:", mul)
-
+def csv_to_json(csv_file, json_file):
+    data = {"people": []}
+    with open(csv_file, 'r') as file:
+        reader = csv.DictReader(file)
+        for row in reader:
+            row["Age"] = int(row["Age"])
+            data["people"].append(row)
+    with open(json_file, 'w') as file:
+        json.dump(data, file)
